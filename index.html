@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jersey Central</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Jersey Central</h1>
+        <p>Premium Custom Jerseys</p>
+        <a href="https://wa.me/8801581872622" class="whatsapp-btn">Order via WhatsApp: +8801581872622</a>
+    </header>
+
+    <section id="hero">
+        <img src="Banner and ads/jc banner.jpeg" alt="Jersey Central Banner" class="hero-banner">
+    </section>
+
+    <section id="jerseys">
+        <h2>Jersey Collection</h2>
+        <div class="jersey-grid">
+            <!-- Add jersey items here -->
+        </div>
+    </section>
+
+    <section id="customization">
+        <h2>Customize Your Jersey</h2>
+        <div class="customizer">
+            <div class="options">
+                <label for="jersey-select">Choose Jersey:</label>
+                <select id="jersey-select">
+                    <option value="front_medium_extended.jpeg">Base Jersey</option>
+                    <!-- Add more options -->
+                </select>
+                <label for="design-upload">Upload Design:</label>
+                <input type="file" id="design-upload" accept="image/*">
+                <button id="preview-btn">Preview</button>
+                <button id="download-btn">Download Design</button>
+                <a href="https://wa.me/8801581872622?text=Hi, I want to customize a jersey with this design." class="whatsapp-custom">WhatsApp Us</a>
+            </div>
+            <div class="preview">
+                <canvas id="preview-canvas" width="300" height="400"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Contact: <a href="https://wa.me/8801581872622">+8801581872622</a></p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
