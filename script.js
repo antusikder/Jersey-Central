@@ -17,6 +17,7 @@ class JerseyCentral {
     }
 
     async init() {
+        console.log('init started');
         this.setupCanvas();
         this.populateJerseySelect();
         this.renderProductGrid();
@@ -542,4 +543,6 @@ class JerseyCentral {
 }
 
 // Start
+console.log('JerseyCentral initializing...');
 window.jerseyCentral = new JerseyCentral();
+console.log('JerseyCentral initialized');
