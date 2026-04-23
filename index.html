@@ -3,152 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jersey Central - Premium Custom Jerseys</title>
+    <title>Jersey Central | Premium Custom Sportswear</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="University Logos/harvard.png">
 </head>
 <body>
+    <!-- Loader -->
+    <div id="loader" class="loader">
+        <div class="spinner"></div>
+        <p>Loading Jersey Central...</p>
+    </div>
+
     <!-- Header -->
-    <header>
+    <header class="header">
         <div class="header-container">
-            <div class="logo">
-                <span class="logo-icon">JC</span>
+            <a href="/" class="logo">
+                <img src="University Logos/harvard.png" alt="Jersey Central Logo" class="logo-img">
                 <div class="logo-text">
-                    <h1>JERSEY CENTRAL</h1>
-                    <p class="tagline">Premium Custom Sportswear</p>
+                    <span class="logo-main">JERSEY CENTRAL</span>
+                    <span class="logo-tagline">Premium Custom Sportswear</span>
                 </div>
-            </div>
-            <nav>
-                <a href="#hero" class="nav-link">Home</a>
-                <a href="#jerseys" class="nav-link">Collection</a>
-                <a href="#customization" class="nav-link">Customize</a>
+            </a>
+            <nav class="nav">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#collection" class="nav-link">Collection</a>
+                <a href="#customizer" class="nav-link">Customizer</a>
+                <a href="#designs" class="nav-link">Designs</a>
                 <a href="#contact" class="nav-link">Contact</a>
             </nav>
-            <a href="https://wa.me/8801581872622" class="whatsapp-float" target="_blank">
-                <i class="fab fa-whatsapp"></i>
-                <span>ORDER NOW</span>
+            <a href="https://wa.me/8801581872622" class="header-cta" target="_blank">
+                <i class="fab fa-whatsapp"></i> Order Now
             </a>
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </header>
 
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="#home" class="mobile-link">Home</a>
+        <a href="#collection" class="mobile-link">Collection</a>
+        <a href="#customizer" class="mobile-link">Customizer</a>
+        <a href="#designs" class="mobile-link">Designs</a>
+        <a href="#contact" class="mobile-link">Contact</a>
+        <a href="https://wa.me/8801581872622" class="mobile-cta" target="_blank">WhatsApp Order</a>
+    </div>
+
     <!-- Hero Section -->
-    <section id="hero">
-        <div class="hero-overlay"></div>
+    <section id="home" class="hero">
+        <div class="hero-bg">
+            <img src="Banner and ads/jc banner.jpeg" alt="Hero Banner" class="hero-img">
+            <div class="hero-overlay"></div>
+        </div>
         <div class="hero-content">
-            <h2 class="hero-title">WEAR YOUR PASSION</h2>
-            <p class="hero-subtitle">Premium Custom Jerseys & Sportswear</p>
-            <a href="https://wa.me/8801581872622?text=Hi!%20I%20want%20to%20order%20custom%20jerseys." class="cta-btn">
-                <i class="fab fa-whatsapp"></i> Order via WhatsApp
-            </a>
-        </div>
-    </section>
-
-    <!-- Jerseys Collection -->
-    <section id="jerseys" class="section">
-        <div class="section-header">
-            <h2>Our Jersey Collection</h2>
-            <p>Select from 47+ premium designs</p>
-        </div>
-        <div class="filter-bar">
-            <button class="filter-btn active" data-filter="all">All Jerseys</button>
-        </div>
-        <div class="jersey-grid" id="jersey-grid"></div>
-    </section>
-
-    <!-- Additional Graphics Sections -->
-    <section id="graphics" class="section">
-        <div class="section-header">
-            <h2>Design Elements</h2>
-            <p>Use our premium graphics to customize</p>
-        </div>
-        <div class="graphics-tabs">
-            <button class="tab-btn active" data-tab="university">University Logos</button>
-            <button class="tab-btn" data-tab="bd">Bangladesh</button>
-            <button class="tab-btn" data-tab="hearts">Hearts</button>
-            <button class="tab-btn" data-tab="popular">Popular</button>
-        </div>
-        <div class="graphics-grid" id="graphics-grid"></div>
-    </section>
-
-    <!-- Customization Section -->
-    <section id="customization" class="section">
-        <div class="section-header">
-            <h2>Customize Your Jersey</h2>
-            <p>Upload your design and create your unique jersey</p>
-        </div>
-        <div class="customizer-container">
-            <div class="customizer-options">
-                <div class="option-group">
-                    <label for="jersey-select"><i class="fas fa-tshirt"></i> Choose Jersey Base</label>
-                    <select id="jersey-select"></select>
+            <div class="hero-badge">Premium Quality • Fast Delivery</div>
+            <h1 class="hero-title">WEAR YOUR<br><span class="highlight">PASSION</span></h1>
+            <p class="hero-subtitle">Custom jerseys designed by you, made for champions. Upload your idea, get it delivered.</p>
+            <div class="hero-cta-group">
+                <a href="#collection" class="btn btn-primary">Browse Collection</a>
+                <a href="https://wa.me/8801581872622?text=Hi!%20I%20want%20to%20order%20custom%20jerseys." class="btn btn-whatsapp" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Order on WhatsApp
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">47+</span>
+                    <span class="stat-label">Designs</span>
                 </div>
-
-                <div class="option-group">
-                    <label for="design-upload"><i class="fas fa-upload"></i> Upload Your Design</label>
-                    <input type="file" id="design-upload" accept="image/*, .png, .jpg, .jpeg">
-                    <small>PNG, JPG up to 10MB (transparent background recommended)</small>
+                <div class="stat">
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">Support</span>
                 </div>
+                <div class="stat">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Customizable</span>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
 
-                <div class="option-group">
-                    <label><i class="fas fa-cogs"></i> Design Position</label>
-                    <div class="position-options">
-                        <button class="pos-btn active" data-pos="front">Front</button>
-                        <button class="pos-btn" data-pos="back">Back</button>
-                        <button class="pos-btn" data-pos="sleeve">Sleeve</button>
+    <!-- Collection Section -->
+    <section id="collection" class="section collection">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Our Products</span>
+                <h2 class="section-title">Premium Jersey Collection</h2>
+                <p class="section-subtitle">Choose from our wide range of premium jerseys. Each with unique order number.</p>
+            </div>
+
+            <div class="filter-bar">
+                <button class="filter-btn active" data-filter="all">All Jerseys</button>
+                <button class="filter-btn" data-filter="football">Football</button>
+                <button class="filter-btn" data-filter="basketball">Basketball</button>
+                <button class="filter-btn" data-filter=" cricket">Cricket</button>
+                <button class="filter-btn" data-filter="custom">Custom</button>
+            </div>
+
+            <div class="product-grid" id="product-grid">
+                <!-- Populated by JS -->
+            </div>
+
+            <div class="collection-cta">
+                <a href="https://wa.me/8801581872622?text=Hi!%20I%20want%20to%20see%20the%20full%20collection." class="btn btn-outline" target="_blank">
+                    <i class="fab fa-whatsapp"></i> View Full Catalog on WhatsApp
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Customizer Section -->
+    <section id="customizer" class="section customizer-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Create</span>
+                <h2 class="section-title">Advanced Jersey Customizer</h2>
+                <p class="section-subtitle">Design your perfect jersey. Upload artwork, add text, change colors, and order directly.</p>
+            </div>
+
+            <div class="customizer-layout">
+                <!-- Toolbar -->
+                <div class="toolbar">
+                    <div class="tool-group">
+                        <button class="tool-btn active" data-tool="select" title="Select & Move">
+                            <i class="fas fa-mouse-pointer"></i>
+                        </button>
+                        <button class="tool-btn" data-tool="text" title="Add Text">
+                            <i class="fas fa-font"></i>
+                        </button>
+                        <button class="tool-btn" data-tool="shape" title="Add Shape">
+                            <i class="fas fa-shapes"></i>
+                        </button>
+                    </div>
+                    <div class="tool-group">
+                        <button class="tool-btn" id="undo-btn" title="Undo (Ctrl+Z)">
+                            <i class="fas fa-undo"></i>
+                        </button>
+                        <button class="tool-btn" id="redo-btn" title="Redo (Ctrl+Y)">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                        <button class="tool-btn" id="clear-btn" title="Clear All">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="tool-group">
+                        <label class="file-upload">
+                            <input type="file" id="upload-design" accept="image/*,.svg">
+                            <i class="fas fa-upload"></i> Upload Image
+                        </label>
                     </div>
                 </div>
 
-                <div class="action-buttons">
-                    <button id="preview-btn" class="btn-primary">
-                        <i class="fas fa-eye"></i> Preview
-                    </button>
-                    <button id="download-btn" class="btn-secondary">
-                        <i class="fas fa-download"></i> Download
-                    </button>
+                <!-- Main Editor -->
+                <div class="editor-main">
+                    <div class="editor-canvas-container">
+                        <canvas id="editor-canvas" width="600" height="800"></canvas>
+                        <div class="canvas-controls">
+                            <button id="zoom-in"><i class="fas fa-search-plus"></i></button>
+                            <span id="zoom-level">100%</span>
+                            <button id="zoom-out"><i class="fas fa-search-minus"></i></button>
+                            <button id="reset-view"><i class="fas fa-compress"></i></button>
+                        </div>
+                    </div>
                 </div>
 
-                <a href="https://wa.me/8801581872622?text=Hi!%20I%20want%20to%20order%20custom%20jersey%20with%20order%20JC${getOrderNumber()}" class="whatsapp-order-btn" id="whatsapp-order-btn">
-                    <i class="fab fa-whatsapp"></i> Order via WhatsApp
-                </a>
+                <!-- Sidebar -->
+                <div class="editor-sidebar">
+                    <!-- Jersey Selection -->
+                    <div class="sidebar-panel">
+                        <h3 class="panel-title"><i class="fas fa-tshirt"></i> Jersey Base</h3>
+                        <div class="jersey-selector">
+                            <select id="base-jersey-select" class="custom-select">
+                                <!-- Populated by JS -->
+                            </select>
+                            <div class="jersey-preview">
+                                <img id="base-jersey-img" src="" alt="Base Jersey">
+                            </div>
+                        </div>
+                        <div class="color-picker-group">
+                            <label>Jersey Color Overlay</label>
+                            <input type="color" id="jersey-color" value="#ffffff">
+                            <input type="range" id="color-opacity" min="0" max="100" value="0">
+                            <span>Opacity: <span id="opacity-val">0</span>%</span>
+                        </div>
+                    </div>
+
+                    <!-- Design Elements -->
+                    <div class="sidebar-panel">
+                        <h3 class="panel-title"><i class="fas fa-shapes"></i> Design Elements</h3>
+                        <div class="tabs">
+                            <button class="tab-btn active" data-tab="uploaded">My Uploads</button>
+                            <button class="tab-btn" data-tab="graphics">Graphics</button>
+                        </div>
+                        <div class="tab-content active" id="tab-uploaded">
+                            <div class="uploaded-items" id="uploaded-items">
+                                <p class="empty-state">No uploaded designs yet</p>
+                            </div>
+                        </div>
+                        <div class="tab-content" id="tab-graphics">
+                            <div class="graphics-categories">
+                                <button class="cat-btn active" data-cat="university">University</button>
+                                <button class="cat-btn" data-cat="bd">Bangladesh</button>
+                                <button class="cat-btn" data-cat="hearts">Hearts</button>
+                                <button class="cat-btn" data-cat="popular">Popular</button>
+                            </div>
+                            <div class="graphics-grid" id="graphics-grid"></div>
+                        </div>
+                    </div>
+
+                    <!-- Text Properties -->
+                    <div class="sidebar-panel" id="text-properties" style="display: none;">
+                        <h3 class="panel-title"><i class="fas fa-font"></i> Text Properties</h3>
+                        <div class="property-row">
+                            <label>Text</label>
+                            <input type="text" id="text-input" placeholder="Enter text">
+                        </div>
+                        <div class="property-row">
+                            <label>Font</label>
+                            <select id="font-select" class="custom-select">
+                                <option value="Inter">Inter</option>
+                                <option value="Arial">Arial</option>
+                                <option value="Helvetica">Helvetica</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Courier New">Courier New</option>
+                            </select>
+                        </div>
+                        <div class="property-row">
+                            <label>Size</label>
+                            <input type="number" id="font-size" value="24" min="8" max="200">
+                        </div>
+                        <div class="property-row">
+                            <label>Color</label>
+                            <input type="color" id="text-color" value="#000000">
+                        </div>
+                        <div class="property-row">
+                            <label>Bold</label>
+                            <input type="checkbox" id="text-bold">
+                        </div>
+                    </div>
+
+                    <!-- Order Panel -->
+                    <div class="sidebar-panel order-panel">
+                        <h3 class="panel-title"><i class="fas fa-shopping-cart"></i> Your Order</h3>
+                        <div class="order-summary">
+                            <div class="order-item">
+                                <span>Jersey:</span>
+                                <span id="order-jersey-name">Select a jersey</span>
+                            </div>
+                            <div class="order-item">
+                                <span>Order #:</span>
+                                <span id="order-number" class="order-id">--</span>
+                            </div>
+                            <div class="order-item">
+                                <span>Design:</span>
+                                <span id="design-count">0 elements</span>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <button id="preview-design" class="btn btn-secondary">
+                                <i class="fas fa-eye"></i> Preview
+                            </button>
+                            <button id="download-design" class="btn btn-secondary">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                            <a href="https://wa.me/8801581872622?text=Hi!%20I%20want%20to%20order%20custom%20jersey%20Order%20Number:%20" id="whatsapp-order" class="btn btn-whatsapp" target="_blank">
+                                <i class="fab fa-whatsapp"></i> Order via WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Designs Gallery -->
+    <section id="designs" class="section designs-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Gallery</span>
+                <h2 class="section-title">Design Inspiration</h2>
+                <p class="section-subtitle">Explore our collection of graphics and logos to customize your jersey.</p>
             </div>
 
-            <div class="preview-area">
-                <div class="preview-header">
-                    <h3>Live Preview</h3>
-                    <span id="order-number-display"></span>
+            <div class="designs-tabs">
+                <button class="design-tab active" data-category="university">University Logos</button>
+                <button class="design-tab" data-category="bd">Bangladesh</button>
+                <button class="design-tab" data-category="hearts">Hearts</button>
+                <button class="design-tab" data-category="popular">Popular</button>
+            </div>
+
+            <div class="designs-grid" id="designs-grid">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section contact-section">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h2 class="contact-title">Get In Touch</h2>
+                    <p class="contact-desc">Ready to create your custom jersey? Contact us via WhatsApp for orders, inquiries, or design assistance.</p>
+                    <div class="contact-methods">
+                        <a href="https://wa.me/8801581872622" class="contact-card whatsapp" target="_blank">
+                            <i class="fab fa-whatsapp"></i>
+                            <div>
+                                <h4>WhatsApp</h4>
+                                <p>+880 1581 872 622</p>
+                            </div>
+                        </a>
+                        <div class="contact-card">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h4>Availability</h4>
+                                <p>24/7 Online</p>
+                            </div>
+                        </div>
+                        <div class="contact-card">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h4>Location</h4>
+                                <p>Jersey Central, Bangladesh</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="canvas-wrapper">
-                    <canvas id="preview-canvas" width="400" height="550"></canvas>
-                </div>
-                <div class="preview-controls">
-                    <button id="reset-btn"><i class="fas fa-redo"></i> Reset</button>
+                <div class="contact-form-wrapper">
+                    <h3>Send us a message</h3>
+                    <a href="https://wa.me/8801581872622?text=Hi!%20I%20want%20to%20inquire%20about%20custom%20jerseys." class="btn btn-whatsapp big" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Start Conversation
+                    </a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer id="contact">
-        <div class="footer-content">
-            <div class="footer-brand">
-                <h3>Jersey Central</h3>
-                <p>Premium custom sportswear for athletes and teams</p>
-                <div class="social-links">
-                    <a href="https://wa.me/8801581872622" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <img src="University Logos/harvard.png" alt="Jersey Central" class="footer-logo">
+                    <p>Premium custom sportswear for athletes, teams, and brands. Quality you can trust.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <a href="#home">Home</a>
+                    <a href="#collection">Collection</a>
+                    <a href="#customizer">Customizer</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <a href="https://wa.me/8801581872622" target="_blank">WhatsApp Order</a>
+                    <a href="https://wa.me/8801581872622" target="_blank">Design Help</a>
+                    <a href="https://wa.me/8801581872622" target="_blank">Bulk Orders</a>
+                </div>
+                <div class="footer-social">
+                    <h4>Connect</h4>
+                    <a href="https://wa.me/8801581872622" target="_blank" class="social-btn whatsapp"><i class="fab fa-whatsapp"></i></a>
                 </div>
             </div>
-            <div class="footer-contact">
-                <h4>Contact Us</h4>
-                <p><i class="fas fa-phone"></i> +880 1581 872 622</p>
-                <p><i class="fab fa-whatsapp"></i> WhatsApp Only</p>
-                <p><i class="fas fa-clock"></i> 24/7 Available</p>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Jersey Central. All rights reserved. Made with <span class="heart">❤</span> for sports lovers.</p>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 Jersey Central. All rights reserved.</p>
-        </div>
     </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/8801581872622?text=Hi!%20I%20want%20to%20order%20custom%20jerseys." class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+        <span>Order Now</span>
+    </a>
 
     <!-- Scripts -->
     <script src="script.js"></script>
