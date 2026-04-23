@@ -26,19 +26,29 @@ class JerseyCentral {
         this.renderProductGrid();
         this.loadGraphics('university');
         this.setupEventListeners();
-        this.loadJersey(0);
-        this.updateOrderSummary();
-
-        // Hide loader
+        
+        // Hide loader and then load jersey
         setTimeout(() => {
             document.getElementById('loader').classList.add('hidden');
-        }, 1000);
+            this.loadJersey(0);
+            this.updateOrderSummary();
+        }, 800);
     }
 
     setupCanvas() {
         this.canvas = document.getElementById('editor-canvas');
+        if (!this.canvas) {
+            console.error('Canvas element not found!');
+            return;
+        }
         this.ctx = this.canvas.getContext('2d');
-        this.renderCanvas();
+        // Initial render with placeholder
+        this.ctx.fillStyle = '#0d1117';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillStyle = '#c9a227';
+        this.ctx.font = '16px Inter';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText('Select a jersey to start designing', this.canvas.width/2, this.canvas.height/2);
     }
 
     // Jersey Management
@@ -74,21 +84,33 @@ class JerseyCentral {
     loadJersey(index) {
         this.currentJersey = index;
         const imgPath = this.getJerseyImagePath(index);
+        
+        // Show loading state immediately
+        this.ctx.fillStyle = '#0d1117';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillStyle = '#c9a227';
+        this.ctx.font = '16px Inter';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText(`Loading Jersey ${this.getOrderNumber(index)}...`, this.canvas.width/2, this.canvas.height/2);
+        
         this.baseImage.crossOrigin = 'anonymous';
         this.baseImage.onload = () => {
             this.renderCanvas();
             this.updateOrderSummary();
             this.updateJerseyPreview(index);
         };
-        this.baseImage.onerror = (e) => {
+        this.baseImage.onerror = () => {
             console.warn('Failed to load jersey:', imgPath);
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.ctx.fillStyle = '#ff3b3b';
+            this.ctx.fillStyle = '#1a1a1a';
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-            this.ctx.fillStyle = 'white';
-            this.ctx.font = '20px Inter';
+            this.ctx.fillStyle = '#c9a227';
+            this.ctx.font = '18px Inter';
             this.ctx.textAlign = 'center';
-            this.ctx.fillText('Image not found', this.canvas.width/2, this.canvas.height/2);
+            this.ctx.fillText('Jersey Image', this.canvas.width/2, this.canvas.height/2 - 20);
+            this.ctx.font = '14px Inter';
+            this.ctx.fillStyle = '#666';
+            this.ctx.fillText('Select a jersey from dropdown', this.canvas.width/2, this.canvas.height/2 + 20);
         };
         this.baseImage.src = imgPath;
     }
@@ -222,8 +244,11 @@ class JerseyCentral {
             if (el.type === 'image') {
                 const img = new Image();
                 img.crossOrigin = 'anonymous';
+                // Draw immediately with placeholder, will update when loaded
+                this.ctx.fillStyle = 'rgba(201,162,39,0.1)';
+                this.ctx.fillRect(el.x, el.y, el.width, el.height);
                 img.onload = () => {
-                    this.ctx.drawImage(img, el.x, el.y, el.width, el.height);
+                    this.renderCanvas(); // Redraw when image loads
                 };
                 img.src = el.src;
             } else if (el.type === 'text') {
