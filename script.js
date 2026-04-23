@@ -10,10 +10,6 @@ class JerseyCentral {
         this.ctx = null;
         this.baseImage = new Image();
         this.zoom = 1;
-        this.panX = 0;
-        this.panY = 0;
-        this.isDragging = false;
-        this.dragStart = { x: 0, y: 0 };
         this.history = [];
         this.historyIndex = -1;
 
@@ -27,9 +23,9 @@ class JerseyCentral {
         this.loadGraphics('university');
         this.setupEventListeners();
         
-        // Hide loader and then load jersey
+        // Hide loader then load jersey
         setTimeout(() => {
-            document.getElementById('loader').classList.add('hidden');
+            document.getElementById('loader')?.classList.add('hidden');
             this.loadJersey(0);
             this.updateOrderSummary();
         }, 800);
@@ -37,12 +33,12 @@ class JerseyCentral {
 
     setupCanvas() {
         this.canvas = document.getElementById('editor-canvas');
-        if (!this.canvas) {
-            console.error('Canvas element not found!');
-            return;
-        }
+        if (!this.canvas) return;
         this.ctx = this.canvas.getContext('2d');
-        // Initial render with placeholder
+        this.renderPlaceholder();
+    }
+
+    renderPlaceholder() {
         this.ctx.fillStyle = '#0d1117';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.fillStyle = '#c9a227';
@@ -52,13 +48,10 @@ class JerseyCentral {
     }
 
     // Jersey Management
-    getJerseyCount() {
-        return 47;
-    }
+    getJerseyCount() { return 47; }
 
     getJerseyImagePath(index) {
-        if (index === 0) return 'Banner and ads/front_medium_extended.jpeg';
-        return `Banner and ads/front_medium_extended (${index}).jpeg`;
+        return index === 0 ? 'Banner and ads/front_medium_extended.jpeg' : `Banner and ads/front_medium_extended (${index}).jpeg`;
     }
 
     getOrderNumber(index) {
@@ -67,32 +60,28 @@ class JerseyCentral {
 
     populateJerseySelect() {
         const select = document.getElementById('base-jersey-select');
+        if (!select) return;
         select.innerHTML = '';
-
         for (let i = 0; i < this.getJerseyCount(); i++) {
             const option = document.createElement('option');
             option.value = i;
             option.textContent = `Jersey ${this.getOrderNumber(i)}`;
             select.appendChild(option);
         }
-
-        select.addEventListener('change', (e) => {
-            this.loadJersey(parseInt(e.target.value));
-        });
     }
 
     loadJersey(index) {
         this.currentJersey = index;
         const imgPath = this.getJerseyImagePath(index);
         
-        // Show loading state immediately
+        // Show loading state
         this.ctx.fillStyle = '#0d1117';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.fillStyle = '#c9a227';
         this.ctx.font = '16px Inter';
         this.ctx.textAlign = 'center';
-        this.ctx.fillText(`Loading Jersey ${this.getOrderNumber(index)}...`, this.canvas.width/2, this.canvas.height/2);
-        
+        this.ctx.fillText(`Loading...`, this.canvas.width/2, this.canvas.height/2);
+
         this.baseImage.crossOrigin = 'anonymous';
         this.baseImage.onload = () => {
             this.renderCanvas();
@@ -100,58 +89,51 @@ class JerseyCentral {
             this.updateJerseyPreview(index);
         };
         this.baseImage.onerror = () => {
-            console.warn('Failed to load jersey:', imgPath);
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.ctx.fillStyle = '#1a1a1a';
-            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-            this.ctx.fillStyle = '#c9a227';
-            this.ctx.font = '18px Inter';
-            this.ctx.textAlign = 'center';
-            this.ctx.fillText('Jersey Image', this.canvas.width/2, this.canvas.height/2 - 20);
-            this.ctx.font = '14px Inter';
-            this.ctx.fillStyle = '#666';
-            this.ctx.fillText('Select a jersey from dropdown', this.canvas.width/2, this.canvas.height/2 + 20);
+            this.renderPlaceholder();
         };
         this.baseImage.src = imgPath;
     }
 
     updateJerseyPreview(index) {
-        const previewImg = document.getElementById('base-jersey-img');
-        previewImg.src = this.getJerseyImagePath(index);
+        const img = document.getElementById('base-jersey-img');
+        if (img) img.src = this.getJerseyImagePath(index);
     }
 
     updateOrderSummary() {
-        document.getElementById('order-number').textContent = this.getOrderNumber(this.currentJersey);
-        document.getElementById('order-jersey-name').textContent = `Jersey ${this.getOrderNumber(this.currentJersey)}`;
-        document.getElementById('design-count').textContent = `${this.designElements.length} elements`;
-
-        const whatsappBtn = document.getElementById('whatsapp-order');
         const orderNum = this.getOrderNumber(this.currentJersey);
-        whatsappBtn.href = `https://wa.me/8801581872622?text=Hi!%20I%20want%20to%20order%20custom%20jersey.%20Order%20Number:%20${orderNum}%20.%20Design:%20${this.designElements.length}%20elements`;
+        document.getElementById('order-number').textContent = orderNum;
+        document.getElementById('order-jersey-name').textContent = `Jersey ${orderNum}`;
+        document.getElementById('design-count').textContent = `${this.designElements.length} elements`;
+        
+        const btn = document.getElementById('whatsapp-order');
+        if (btn) {
+            btn.href = `https://wa.me/8801581872622?text=Hi!%20I%20want%20to%20order%20custom%20jersey.%20Order%20Number:%20${orderNum}%20.%20Design:%20${this.designElements.length}%20elements`;
+        }
     }
 
     // Product Grid
     renderProductGrid() {
         const grid = document.getElementById('product-grid');
+        if (!grid) return;
         grid.innerHTML = '';
-
         for (let i = 0; i < this.getJerseyCount(); i++) {
+            const orderNum = this.getOrderNumber(i);
             const card = document.createElement('div');
             card.className = 'product-card';
             card.innerHTML = `
                 <div class="product-img-container">
-                    <img src="${this.getJerseyImagePath(i)}" alt="Jersey ${this.getOrderNumber(i)}" class="product-img" loading="lazy" onerror="this.style.display='none'">
+                    <img src="${this.getJerseyImagePath(i)}" alt="Jersey ${orderNum}" class="product-img" loading="lazy" onerror="this.style.display='none'">
                     <div class="product-overlay">
-                        <a href="https://wa.me/8801581872622?text=Hi!%20I%20want%20to%20order%20Jersey%20${this.getOrderNumber(i)}" class="btn btn-primary" target="_blank">
+                        <a href="https://wa.me/8801581872622?text=Hi!%20I%20want%20to%20order%20Jersey%20${orderNum}" class="btn btn-primary" target="_blank">
                             <i class="fab fa-whatsapp"></i> Order Now
                         </a>
                     </div>
                 </div>
                 <div class="product-info">
-                    <h3 class="product-name">Premium Jersey ${this.getOrderNumber(i)}</h3>
+                    <h3 class="product-name">Premium Jersey ${orderNum}</h3>
                     <div class="product-meta">
                         <span>Customizable</span>
-                        <span class="order-badge">#${this.getOrderNumber(i)}</span>
+                        <span class="order-badge">#${orderNum}</span>
                     </div>
                 </div>
             `;
@@ -159,73 +141,52 @@ class JerseyCentral {
         }
     }
 
-    // Graphics Loading
-    getGraphicsPath(category, filename) {
+    // Graphics
+    getGraphicsPath(cat, file) {
         const paths = {
-            university: `University Logos/${filename}`,
-            bd: `Graphics/Bangladesh/${filename}`,
-            hearts: `Graphics/Hearts/${filename}`,
-            popular: `Banner and ads/${filename}`
+            university: `University Logos/${file}`,
+            bd: `Graphics/Bangladesh/${file}`,
+            hearts: `Graphics/Hearts/${file}`,
+            popular: `Banner and ads/${file}`
         };
-        return paths[category] || filename;
+        return paths[cat] || file;
     }
 
     loadGraphics(category) {
         const grid = document.getElementById('graphics-grid');
+        if (!grid) return;
         grid.innerHTML = '';
+        
+        const files = {
+            university: ['Brown Uni.png','Cornell 2.png','cornell.png','Dartmouth 2.png','dartmouth.png','harvard.png','harvard1.png','harvard3.png','ivy.png','princton.png','princton 2.png'],
+            bd: [...Array(80).keys()].map(i => `tl (${i+1}).png`).concat(['tl.png','tl.jpg']),
+            hearts: [...Array(88).keys()].map(i => `tl (${i+102}).png`),
+            popular: ['Argentina jersey Player Edition.jpg','Arsenal.jpg','brazil jersey.jpeg','jc banner.jpeg']
+        }[category] || [];
 
-        let files = [];
-        switch (category) {
-            case 'university':
-                files = ['Brown Uni.png', 'Cornell 2.png', 'cornell.png', 'Dartmouth 2.png', 'dartmouth.png', 'harvard.png', 'harvard1.png', 'harvard3.png', 'ivy.png', 'princton.png', 'princton 2.png'];
-                break;
-            case 'bd':
-                files = Array.from({length: 80}, (_, i) => `tl (${i+1}).png`);
-                files.push('tl.png', 'tl.jpg');
-                break;
-            case 'hearts':
-                files = Array.from({length: 88}, (_, i) => `tl (${i+102}).png`);
-                break;
-            case 'popular':
-                files = ['Argentina jersey Player Edition.jpg', 'Arsenal.jpg', 'brazil jersey.jpeg', 'jc banner.jpeg'];
-                break;
-        }
-
-        files.forEach((file, idx) => {
+        files.forEach(file => {
             const div = document.createElement('div');
             div.className = 'graphic-item';
-            div.innerHTML = `<img src="${this.getGraphicsPath(category, file)}" alt="Graphic ${idx}" loading="lazy" onerror="this.parentElement.style.display='none'">`;
-            div.addEventListener('click', () => {
-                this.addDesignElement({
-                    type: 'image',
-                    src: this.getGraphicsPath(category, file),
-                    x: 150,
-                    y: 200,
-                    width: 100,
-                    height: 100
-                });
-            });
+            div.innerHTML = `<img src="${this.getGraphicsPath(category, file)}" alt="Graphic" loading="lazy" onerror="this.parentElement.style.display='none'">`;
+            div.onclick = () => this.addDesignElement({ type: 'image', src: this.getGraphicsPath(category, file), x: 150, y: 200, width: 100, height: 100 });
             grid.appendChild(div);
         });
     }
 
-    // Canvas Rendering
+    // Canvas
     renderCanvas() {
+        if (!this.ctx) return;
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Draw base jersey or placeholder
+        // Base jersey
         if (this.baseImage.src) {
             this.ctx.drawImage(this.baseImage, 0, 0, this.canvas.width, this.canvas.height);
         } else {
-            this.ctx.fillStyle = '#1a1a1a';
-            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-            this.ctx.fillStyle = '#666';
-            this.ctx.font = '20px Inter';
-            this.ctx.textAlign = 'center';
-            this.ctx.fillText('Select a jersey to begin', this.canvas.width/2, this.canvas.height/2);
+            this.renderPlaceholder();
+            return;
         }
 
-        // Apply jersey color overlay if set
+        // Color overlay
         const colorInput = document.getElementById('jersey-color');
         const opacityInput = document.getElementById('color-opacity');
         if (colorInput && opacityInput) {
@@ -238,19 +199,16 @@ class JerseyCentral {
             }
         }
 
-        // Draw all design elements
+        // Design elements
         this.designElements.forEach(el => {
             this.ctx.save();
             if (el.type === 'image') {
                 const img = new Image();
                 img.crossOrigin = 'anonymous';
-                // Draw immediately with placeholder, will update when loaded
+                img.onload = () => this.renderCanvas();
+                img.src = el.src;
                 this.ctx.fillStyle = 'rgba(201,162,39,0.1)';
                 this.ctx.fillRect(el.x, el.y, el.width, el.height);
-                img.onload = () => {
-                    this.renderCanvas(); // Redraw when image loads
-                };
-                img.src = el.src;
             } else if (el.type === 'text') {
                 this.ctx.font = `${el.bold ? 'bold ' : ''}${el.size}px ${el.font}`;
                 this.ctx.fillStyle = el.color;
@@ -259,16 +217,14 @@ class JerseyCentral {
             this.ctx.restore();
         });
 
-        // Draw selection border if element selected
+        // Selection border
         if (this.selectedElement) {
             const el = this.selectedElement;
-            this.ctx.strokeStyle = '#ff3b3b';
+            this.ctx.strokeStyle = '#c9a227';
             this.ctx.lineWidth = 2;
             this.ctx.setLineDash([5, 5]);
             this.ctx.strokeRect(el.x - 2, el.y - 2, el.width + 4, el.height + 4);
         }
-
-        this.updateOrderSummary();
     }
 
     addDesignElement(element) {
@@ -279,21 +235,141 @@ class JerseyCentral {
         this.renderCanvas();
     }
 
-    // Event Listeners
-    setupEventListeners() {
-        // Canvas mouse events
-        this.canvas.addEventListener('mousedown', (e) => this.onMouseDown(e));
-        this.canvas.addEventListener('mousemove', (e) => this.onMouseMove(e));
-        this.canvas.addEventListener('mouseup', (e) => this.onMouseUp(e));
-        this.canvas.addEventListener('wheel', (e) => this.onWheel(e));
+    // Mouse handlers
+    getCanvasCoords(e) {
+        const rect = this.canvas.getBoundingClientRect();
+        return {
+            x: (e.clientX - rect.left) * (this.canvas.width / rect.width),
+            y: (e.clientY - rect.top) * (this.canvas.height / rect.height)
+        };
+    }
 
-        // Touch events
-        this.canvas.addEventListener('touchstart', (e) => this.onTouchStart(e));
-        this.canvas.addEventListener('touchmove', (e) => this.onTouchMove(e));
-        this.canvas.addEventListener('touchend', (e) => this.onTouchEnd(e));
+    onMouseDown(e) {
+        const coords = this.getCanvasCoords(e);
+        this.isDragging = true;
+        this.selectedElement = null;
+        for (let i = this.designElements.length - 1; i >= 0; i--) {
+            const el = this.designElements[i];
+            if (coords.x >= el.x && coords.x <= el.x + el.width && coords.y >= el.y && coords.y <= el.y + el.height) {
+                this.selectedElement = el;
+                this.dragOffset = { x: coords.x - el.x, y: coords.y - el.y };
+                break;
+            }
+        }
+        this.renderCanvas();
+    }
 
-        // Tool selection
-        this.currentTool = 'select';
+    onMouseMove(e) {
+        if (!this.isDragging || !this.selectedElement) return;
+        const coords = this.getCanvasCoords(e);
+        this.selectedElement.x = coords.x - this.dragOffset.x;
+        this.selectedElement.y = coords.y - this.dragOffset.y;
+        this.renderCanvas();
+    }
+
+    onMouseUp() {
+        if (this.isDragging && this.selectedElement) this.saveHistory();
+        this.isDragging = false;
+        this.updatePropertiesPanel();
+    }
+
+    onWheel(e) {
+        e.preventDefault();
+        this.zoomCanvas(e.deltaY > 0 ? -0.1 : 0.1);
+    }
+
+    onTouchStart(e) {
+        if (e.touches.length === 1) {
+            const t = e.touches[0];
+            this.onMouseDown({ clientX: t.clientX, clientY: t.clientY });
+        }
+    }
+
+    onTouchMove(e) {
+        if (e.touches.length === 1) {
+            e.preventDefault();
+            const t = e.touches[0];
+            this.onMouseMove({ clientX: t.clientX, clientY: t.clientY });
+        }
+    }
+
+    onTouchEnd() { this.onMouseUp(); }
+
+    // Controls
+    zoomCanvas(delta) {
+        this.zoom = Math.max(0.5, Math.min(2, this.zoom + delta));
+        this.canvas.style.transform = `scale(${this.zoom})`;
+        document.getElementById('zoom-level').textContent = Math.round(this.zoom * 100) + '%';
+    }
+
+    resetView() {
+        this.zoom = 1;
+        this.canvas.style.transform = 'scale(1)';
+        document.getElementById('zoom-level').textContent = '100%';
+    }
+
+    clearCanvas() {
+        if (confirm('Clear all design elements?')) {
+            this.designElements = [];
+            this.selectedElement = null;
+            this.saveHistory();
+            this.updatePropertiesPanel();
+            this.renderCanvas();
+        }
+    }
+
+    handleUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) { alert('Upload an image'); return; }
+        if (file.size > 10 * 1024 * 1024) { alert('Max 10MB'); return; }
+
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            const img = new Image();
+            img.onload = () => {
+                this.addDesignElement({
+                    type: 'image',
+                    src: evt.target.result,
+                    x: 100, y: 100,
+                    width: Math.min(200, img.width),
+                    height: Math.min(200, img.height)
+                });
+            };
+            img.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+        e.target.value = '';
+    }
+
+    // Text properties
+    setupTextProperties() {
+        const inputs = {
+            text: document.getElementById('text-input'),
+            font: document.getElementById('font-select'),
+            size: document.getElementById('font-size'),
+            color: document.getElementById('text-color'),
+            bold: document.getElementById('text-bold')
+        };
+        const update = () => {
+            if (this.selectedElement && this.selectedElement.type === 'text') this.renderCanvas();
+        };
+        inputs.text?.addEventListener('input', (e) => { if (this.selectedElement?.type === 'text') { this.selectedElement.text = e.target.value; update(); } });
+        inputs.font?.addEventListener('change', (e) => { if (this.selectedElement?.type === 'text') { this.selectedElement.font = e.target.value; update(); } });
+        inputs.size?.addEventListener('input', (e) => { if (this.selectedElement?.type === 'text') { this.selectedElement.size = parseInt(e.target.value); update(); } });
+        inputs.color?.addEventListener('input', (e) => { if (this.selectedElement?.type === 'text') { this.selectedElement.color = e.target.value; update(); } });
+        inputs.bold?.addEventListener('change', (e) => { if (this.selectedElement?.type === 'text') { this.selectedElement.bold = e.target.checked; update(); } });
+    }
+
+    setupColorControls() {
+        const color = document.getElementById('jersey-color');
+        const opacity = document.getElementById('color-opacity');
+        const update = () => this.renderCanvas();
+        color?.addEventListener('input', update);
+        opacity?.addEventListener('input', (e) => { document.getElementById('opacity-val').textContent = e.target.value; update(); });
+    }
+
+    setupTextTool() {
         document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'));
@@ -303,7 +379,6 @@ class JerseyCentral {
             });
         });
 
-        // Canvas click for adding elements
         this.canvas.addEventListener('click', (e) => {
             if (this.currentTool === 'text' && !this.isDragging) {
                 const coords = this.getCanvasCoords(e);
@@ -312,154 +387,54 @@ class JerseyCentral {
                     this.addDesignElement({
                         type: 'text',
                         text: text,
-                        x: coords.x,
-                        y: coords.y,
-                        font: 'Inter',
-                        size: 24,
-                        color: '#000000',
-                        bold: false,
-                        width: 200,
-                        height: 30
-        });
-    }
-
-    setupTextProperties() {
-        const textInput = document.getElementById('text-input');
-        const fontSelect = document.getElementById('font-select');
-        const fontSize = document.getElementById('font-size');
-        const textColor = document.getElementById('text-color');
-        const textBold = document.getElementById('text-bold');
-
-        const updateText = () => {
-            if (this.selectedElement && this.selectedElement.type === 'text') {
-                this.renderCanvas();
-            }
-        };
-
-        textInput.addEventListener('input', (e) => {
-            if (this.selectedElement && this.selectedElement.type === 'text') {
-                this.selectedElement.text = e.target.value;
-                updateText();
-            }
-        });
-
-        fontSelect.addEventListener('change', (e) => {
-            if (this.selectedElement && this.selectedElement.type === 'text') {
-                this.selectedElement.font = e.target.value;
-                updateText();
-            }
-        });
-
-        fontSize.addEventListener('input', (e) => {
-            if (this.selectedElement && this.selectedElement.type === 'text') {
-                this.selectedElement.size = parseInt(e.target.value);
-                updateText();
-            }
-        });
-
-        textColor.addEventListener('input', (e) => {
-            if (this.selectedElement && this.selectedElement.type === 'text') {
-                this.selectedElement.color = e.target.value;
-                updateText();
-            }
-        });
-
-        textBold.addEventListener('change', (e) => {
-            if (this.selectedElement && this.selectedElement.type === 'text') {
-                this.selectedElement.bold = e.target.checked;
-                updateText();
+                        x: coords.x, y: coords.y,
+                        font: 'Inter', size: 24, color: '#000000', bold: false,
+                        width: 200, height: 30
+                    });
+                }
+                document.querySelector('.tool-btn[data-tool="select"]').click();
             }
         });
     }
 
-    setupColorControls() {
-        const colorInput = document.getElementById('jersey-color');
-        const opacityInput = document.getElementById('color-opacity');
-        const opacityVal = document.getElementById('opacity-val');
+    // Event Listeners
+    setupEventListeners() {
+        // Canvas
+        this.canvas?.addEventListener('mousedown', (e) => this.onMouseDown(e));
+        this.canvas?.addEventListener('mousemove', (e) => this.onMouseMove(e));
+        this.canvas?.addEventListener('mouseup', (e) => this.onMouseUp(e));
+        this.canvas?.addEventListener('wheel', (e) => this.onWheel(e));
+        this.canvas?.addEventListener('touchstart', (e) => this.onTouchStart(e));
+        this.canvas?.addEventListener('touchmove', (e) => this.onTouchMove(e));
+        this.canvas?.addEventListener('touchend', (e) => this.onTouchEnd(e));
 
-        const updateOverlay = () => {
-            this.renderCanvas();
-        };
-
-        colorInput.addEventListener('input', updateOverlay);
-        opacityInput.addEventListener('input', (e) => {
-            opacityVal.textContent = e.target.value;
-            updateOverlay();
-        });
-    }
-        });
-
-        // Color overlay controls
+        this.setupTextTool();
+        this.setupTextProperties();
         this.setupColorControls();
-    }
-
-    setupTextProperties() {
-        const textInput = document.getElementById('text-input');
-        const fontSelect = document.getElementById('font-select');
-        const fontSize = document.getElementById('font-size');
-        const textColor = document.getElementById('text-color');
-        const textBold = document.getElementById('text-bold');
-
-        textInput.addEventListener('input', (e) => {
-            if (this.selectedElement && this.selectedElement.type === 'text') {
-                this.selectedElement.text = e.target.value;
-                this.renderCanvas();
-            }
-        });
-
-        fontSelect.addEventListener('change', (e) => {
-            if (this.selectedElement && this.selectedElement.type === 'text') {
-                this.selectedElement.font = e.target.value;
-                this.renderCanvas();
-            }
-        });
-
-        fontSize.addEventListener('input', (e) => {
-            if (this.selectedElement && this.selectedElement.type === 'text') {
-                this.selectedElement.size = parseInt(e.target.value);
-                this.renderCanvas();
-            }
-        });
-
-        textColor.addEventListener('input', (e) => {
-            if (this.selectedElement && this.selectedElement.type === 'text') {
-                this.selectedElement.color = e.target.value;
-                this.renderCanvas();
-            }
-        });
-
-        textBold.addEventListener('change', (e) => {
-            if (this.selectedElement && this.selectedElement.type === 'text') {
-                this.selectedElement.bold = e.target.checked;
-                this.renderCanvas();
-            }
-        });
-    }
 
         // Buttons
-        document.getElementById('preview-design').addEventListener('click', () => this.showPreview());
-        document.getElementById('download-design').addEventListener('click', () => this.downloadDesign());
-        document.getElementById('clear-btn').addEventListener('click', () => this.clearCanvas());
-        document.getElementById('undo-btn').addEventListener('click', () => this.undo());
-        document.getElementById('redo-btn').addEventListener('click', () => this.redo());
-        document.getElementById('zoom-in').addEventListener('click', () => this.zoomCanvas(0.1));
-        document.getElementById('zoom-out').addEventListener('click', () => this.zoomCanvas(-0.1));
-        document.getElementById('reset-view').addEventListener('click', () => this.resetView());
+        document.getElementById('preview-design')?.addEventListener('click', () => this.showPreview());
+        document.getElementById('download-design')?.addEventListener('click', () => this.downloadDesign());
+        document.getElementById('clear-btn')?.addEventListener('click', () => this.clearCanvas());
+        document.getElementById('undo-btn')?.addEventListener('click', () => this.undo());
+        document.getElementById('redo-btn')?.addEventListener('click', () => this.redo());
+        document.getElementById('zoom-in')?.addEventListener('click', () => this.zoomCanvas(0.1));
+        document.getElementById('zoom-out')?.addEventListener('click', () => this.zoomCanvas(-0.1));
+        document.getElementById('reset-view')?.addEventListener('click', () => this.resetView());
 
         // Upload
-        document.getElementById('upload-design').addEventListener('change', (e) => this.handleUpload(e));
+        document.getElementById('upload-design')?.addEventListener('change', (e) => this.handleUpload(e));
 
-        // Tabs
+        // Tabs & Categories
         document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.tab-btn[data-tab]').forEach(b => b.classList.remove('active'));
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                 btn.classList.add('active');
-                document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+                document.getElementById(`tab-${btn.dataset.tab}`)?.classList.add('active');
             });
         });
 
-        // Graphics categories
         document.querySelectorAll('.cat-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
@@ -477,17 +452,9 @@ class JerseyCentral {
             });
         });
 
-        // Text tool
-        document.getElementById('text-input').addEventListener('input', (e) => {
-            if (this.selectedElement && this.selectedElement.type === 'text') {
-                this.selectedElement.text = e.target.value;
-                this.renderCanvas();
-            }
-        });
-
         // Mobile menu
-        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-            document.getElementById('mobile-menu').classList.toggle('active');
+        document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+            document.getElementById('mobile-menu')?.classList.toggle('active');
         });
 
         // Keyboard shortcuts
@@ -502,202 +469,12 @@ class JerseyCentral {
             }
         });
 
-        // Initial history save
         this.saveHistory();
-    }
-
-    setupTextProperties() {
-        const textInput = document.getElementById('text-input');
-        const fontSelect = document.getElementById('font-select');
-        const fontSize = document.getElementById('font-size');
-        const textColor = document.getElementById('text-color');
-        const textBold = document.getElementById('text-bold');
-
-        textInput.addEventListener('input', (e) => {
-            if (this.selectedElement && this.selectedElement.type === 'text') {
-                this.selectedElement.text = e.target.value;
-                this.renderCanvas();
-            }
-        });
-
-        fontSelect.addEventListener('change', (e) => {
-            if (this.selectedElement && this.selectedElement.type === 'text') {
-                this.selectedElement.font = e.target.value;
-                this.renderCanvas();
-            }
-        });
-
-        fontSize.addEventListener('input', (e) => {
-            if (this.selectedElement && this.selectedElement.type === 'text') {
-                this.selectedElement.size = parseInt(e.target.value);
-                this.renderCanvas();
-            }
-        });
-
-        textColor.addEventListener('input', (e) => {
-            if (this.selectedElement && this.selectedElement.type === 'text') {
-                this.selectedElement.color = e.target.value;
-                this.renderCanvas();
-            }
-        });
-
-        textBold.addEventListener('change', (e) => {
-            if (this.selectedElement && this.selectedElement.type === 'text') {
-                this.selectedElement.bold = e.target.checked;
-                this.renderCanvas();
-            }
-        });
-    }
-
-    // Mouse/Touch handlers
-    getCanvasCoords(e) {
-        const rect = this.canvas.getBoundingClientRect();
-        const scaleX = this.canvas.width / rect.width;
-        const scaleY = this.canvas.height / rect.height;
-        return {
-            x: (e.clientX - rect.left) * scaleX,
-            y: (e.clientY - rect.top) * scaleY
-        };
-    }
-
-    onMouseDown(e) {
-        const coords = this.getCanvasCoords(e);
-        this.isDragging = true;
-        this.dragStart = coords;
-
-        // Check if clicking on an element
-        this.selectedElement = null;
-        for (let i = this.designElements.length - 1; i >= 0; i--) {
-            const el = this.designElements[i];
-            if (coords.x >= el.x && coords.x <= el.x + el.width &&
-                coords.y >= el.y && coords.y <= el.y + el.height) {
-                this.selectedElement = el;
-                break;
-            }
-        }
-
-        if (this.selectedElement) {
-            this.dragOffset = {
-                x: coords.x - this.selectedElement.x,
-                y: coords.y - this.selectedElement.y
-            };
-        }
-
-        this.renderCanvas();
-    }
-
-    onMouseMove(e) {
-        if (!this.isDragging || !this.selectedElement) return;
-        const coords = this.getCanvasCoords(e);
-        this.selectedElement.x = coords.x - this.dragOffset.x;
-        this.selectedElement.y = coords.y - this.dragOffset.y;
-        this.renderCanvas();
-    }
-
-    onMouseUp(e) {
-        if (this.isDragging && this.selectedElement) {
-            this.saveHistory();
-        }
-        this.isDragging = false;
-        this.updatePropertiesPanel();
-        this.renderCanvas();
-    }
-
-    onWheel(e) {
-        e.preventDefault();
-        const delta = e.deltaY > 0 ? -0.1 : 0.1;
-        this.zoomCanvas(delta);
-    }
-
-    // Touch
-    onTouchStart(e) {
-        if (e.touches.length === 1) {
-            const touch = e.touches[0];
-            this.onMouseDown({ clientX: touch.clientX, clientY: touch.clientY });
-        }
-    }
-
-    onTouchMove(e) {
-        if (e.touches.length === 1) {
-            e.preventDefault();
-            const touch = e.touches[0];
-            this.onMouseMove({ clientX: touch.clientX, clientY: touch.clientY });
-        }
-    }
-
-    onTouchEnd(e) {
-        this.onMouseUp(e);
-    }
-
-    // Canvas controls
-    zoomCanvas(delta) {
-        this.zoom = Math.max(0.5, Math.min(2, this.zoom + delta));
-        this.canvas.style.transform = `scale(${this.zoom})`;
-        document.getElementById('zoom-level').textContent = Math.round(this.zoom * 100) + '%';
-    }
-
-    resetView() {
-        this.zoom = 1;
-        this.panX = 0;
-        this.panY = 0;
-        this.canvas.style.transform = 'scale(1)';
-        document.getElementById('zoom-level').textContent = '100%';
-    }
-
-    clearCanvas() {
-        if (confirm('Clear all design elements?')) {
-            this.designElements = [];
-            this.selectedElement = null;
-            this.saveHistory();
-            this.updatePropertiesPanel();
-            this.renderCanvas();
-        }
-    }
-
-    // Upload handling
-    handleUpload(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        if (!file.type.startsWith('image/')) {
-            alert('Please upload an image file');
-            return;
-        }
-
-        if (file.size > 10 * 1024 * 1024) {
-            alert('File too large. Max 10MB');
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const img = new Image();
-            img.onload = () => {
-                this.addDesignElement({
-                    type: 'image',
-                    src: event.target.result,
-                    x: 100,
-                    y: 100,
-                    width: Math.min(200, img.width),
-                    height: Math.min(200, img.height)
-                });
-            };
-            img.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-        e.target.value = '';
-    }
-
-    // History (Undo/Redo)
-    saveHistory() {
-        this.history = this.history.slice(0, this.historyIndex + 1);
-        this.history.push(JSON.stringify(this.designElements));
-        this.historyIndex++;
     }
 
     updatePropertiesPanel() {
         const panel = document.getElementById('text-properties');
-        if (this.selectedElement && this.selectedElement.type === 'text') {
+        if (this.selectedElement?.type === 'text') {
             panel.style.display = 'block';
             document.getElementById('text-input').value = this.selectedElement.text || '';
             document.getElementById('font-select').value = this.selectedElement.font || 'Inter';
@@ -707,6 +484,13 @@ class JerseyCentral {
         } else {
             panel.style.display = 'none';
         }
+    }
+
+    // History
+    saveHistory() {
+        this.history = this.history.slice(0, this.historyIndex + 1);
+        this.history.push(JSON.stringify(this.designElements));
+        this.historyIndex++;
     }
 
     undo() {
@@ -734,17 +518,10 @@ class JerseyCentral {
         const dataUrl = this.canvas.toDataURL('image/png');
         const modal = document.createElement('div');
         modal.className = 'modal active';
-        modal.innerHTML = `
-            <div class="modal-content">
-                <button class="modal-close">&times;</button>
-                <img src="${dataUrl}" class="modal-img" alt="Design Preview">
-            </div>
-        `;
+        modal.innerHTML = `<div class="modal-content"><button class="modal-close">&times;</button><img src="${dataUrl}" class="modal-img" alt="Preview"></div>`;
         document.body.appendChild(modal);
         modal.querySelector('.modal-close').onclick = () => modal.remove();
-        modal.onclick = (e) => {
-            if (e.target === modal) modal.remove();
-        };
+        modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
     }
 
     downloadDesign() {
@@ -760,10 +537,9 @@ class JerseyCentral {
     }
 
     filterProducts(filter) {
-        const cards = document.querySelectorAll('.product-card');
-        cards.forEach(card => card.style.display = 'block'); // Simplified
+        document.querySelectorAll('.product-card').forEach(card => card.style.display = 'block');
     }
 }
 
-// Initialize immediately (script has defer)
+// Start
 window.jerseyCentral = new JerseyCentral();
