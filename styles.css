@@ -3,30 +3,33 @@
    ========================================= */
 
 :root {
-    /* Colors */
-    --primary: #0a0a0a;
-    --secondary: #141414;
-    --accent: #ff3b3b;
-    --accent-light: #ff6b6b;
+    /* Premium Color Palette - Luxurious & Modern */
+    --primary: #050505;
+    --secondary: #0d1117;
+    --accent: #c9a227;
+    --accent-light: #e6c45c;
+    --accent-glow: rgba(201, 162, 39, 0.4);
     --whatsapp: #25D366;
     --whatsapp-hover: #128C7E;
     --gold: #FFD700;
     --white: #ffffff;
-    --gray-100: #f8f9fa;
-    --gray-200: #e9ecef;
-    --gray-800: #343a40;
-    --dark-overlay: rgba(10, 10, 10, 0.85);
+    --white-soft: #f5f5f7;
+    --gray-100: #e2e4e8;
+    --gray-200: #c1c2c5;
+    --gray-800: #484f58;
+    --dark-overlay: rgba(5, 5, 5, 0.92);
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, #ff3b3b 0%, #ff6b6b 100%);
-    --gradient-dark: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
-    --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    /* Premium Gradients */
+    --gradient-primary: linear-gradient(135deg, #c9a227 0%, #e6c45c 50%, #c9a227 100%);
+    --gradient-dark: linear-gradient(180deg, #050505 0%, #0d1117 100%);
+    --gradient-glass: linear-gradient(135deg, rgba(201,162,39,0.08) 0%, rgba(201,162,39,0.02) 100%);
+    --gradient-card: linear-gradient(145deg, rgba(13,17,23,0.95) 0%, rgba(5,5,5,0.98) 100%);
 
     /* Shadows */
     --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
     --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
     --shadow-lg: 0 16px 48px rgba(0,0,0,0.2);
-    --shadow-glow: 0 0 40px rgba(255, 59, 59, 0.3);
+    --shadow-glow: 0 0 40px rgba(201, 162, 39, 0.5);
 
     /* Spacing */
     --space-xs: 0.5rem;
@@ -142,7 +145,7 @@ body {
     width: 50px;
     height: 50px;
     object-fit: contain;
-    filter: drop-shadow(0 0 10px rgba(255,59,59,0.3));
+    filter: drop-shadow(0 0 10px rgba(201,162,39,0.5));
 }
 
 .logo-text {
@@ -1169,7 +1172,7 @@ body {
     width: 60px;
     height: 60px;
     margin-bottom: var(--space-md);
-    filter: drop-shadow(0 0 10px rgba(255,59,59,0.3));
+    filter: drop-shadow(0 0 10px rgba(201,162,39,0.5));
 }
 
 .footer-brand p {
