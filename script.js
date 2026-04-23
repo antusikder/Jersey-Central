@@ -237,6 +237,7 @@ class JerseyCentral {
         this.designElements.push(element);
         this.selectedElement = element;
         this.saveHistory();
+        this.updatePropertiesPanel();
         this.renderCanvas();
     }
 
@@ -252,6 +253,87 @@ class JerseyCentral {
         this.canvas.addEventListener('touchstart', (e) => this.onTouchStart(e));
         this.canvas.addEventListener('touchmove', (e) => this.onTouchMove(e));
         this.canvas.addEventListener('touchend', (e) => this.onTouchEnd(e));
+
+        // Tool selection
+        this.currentTool = 'select';
+        document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.currentTool = btn.dataset.tool;
+                this.canvas.style.cursor = this.currentTool === 'select' ? 'default' : 'crosshair';
+            });
+        });
+
+        // Canvas click for adding elements
+        this.canvas.addEventListener('click', (e) => {
+            if (this.currentTool === 'text' && !this.isDragging) {
+                const coords = this.getCanvasCoords(e);
+                const text = prompt('Enter text:', '');
+                if (text) {
+                    this.addDesignElement({
+                        type: 'text',
+                        text: text,
+                        x: coords.x,
+                        y: coords.y,
+                        font: 'Inter',
+                        size: 24,
+                        color: '#000000',
+                        bold: false,
+                        width: 200,
+                        height: 30
+                    });
+                }
+                document.querySelector('.tool-btn[data-tool="select"]').click();
+            }
+        });
+
+        // Text properties
+        this.setupTextProperties();
+    }
+
+    setupTextProperties() {
+        const textInput = document.getElementById('text-input');
+        const fontSelect = document.getElementById('font-select');
+        const fontSize = document.getElementById('font-size');
+        const textColor = document.getElementById('text-color');
+        const textBold = document.getElementById('text-bold');
+
+        textInput.addEventListener('input', (e) => {
+            if (this.selectedElement && this.selectedElement.type === 'text') {
+                this.selectedElement.text = e.target.value;
+                this.renderCanvas();
+            }
+        });
+
+        fontSelect.addEventListener('change', (e) => {
+            if (this.selectedElement && this.selectedElement.type === 'text') {
+                this.selectedElement.font = e.target.value;
+                this.renderCanvas();
+            }
+        });
+
+        fontSize.addEventListener('input', (e) => {
+            if (this.selectedElement && this.selectedElement.type === 'text') {
+                this.selectedElement.size = parseInt(e.target.value);
+                this.renderCanvas();
+            }
+        });
+
+        textColor.addEventListener('input', (e) => {
+            if (this.selectedElement && this.selectedElement.type === 'text') {
+                this.selectedElement.color = e.target.value;
+                this.renderCanvas();
+            }
+        });
+
+        textBold.addEventListener('change', (e) => {
+            if (this.selectedElement && this.selectedElement.type === 'text') {
+                this.selectedElement.bold = e.target.checked;
+                this.renderCanvas();
+            }
+        });
+    }
 
         // Buttons
         document.getElementById('preview-design').addEventListener('click', () => this.showPreview());
@@ -323,6 +405,49 @@ class JerseyCentral {
         this.saveHistory();
     }
 
+    setupTextProperties() {
+        const textInput = document.getElementById('text-input');
+        const fontSelect = document.getElementById('font-select');
+        const fontSize = document.getElementById('font-size');
+        const textColor = document.getElementById('text-color');
+        const textBold = document.getElementById('text-bold');
+
+        textInput.addEventListener('input', (e) => {
+            if (this.selectedElement && this.selectedElement.type === 'text') {
+                this.selectedElement.text = e.target.value;
+                this.renderCanvas();
+            }
+        });
+
+        fontSelect.addEventListener('change', (e) => {
+            if (this.selectedElement && this.selectedElement.type === 'text') {
+                this.selectedElement.font = e.target.value;
+                this.renderCanvas();
+            }
+        });
+
+        fontSize.addEventListener('input', (e) => {
+            if (this.selectedElement && this.selectedElement.type === 'text') {
+                this.selectedElement.size = parseInt(e.target.value);
+                this.renderCanvas();
+            }
+        });
+
+        textColor.addEventListener('input', (e) => {
+            if (this.selectedElement && this.selectedElement.type === 'text') {
+                this.selectedElement.color = e.target.value;
+                this.renderCanvas();
+            }
+        });
+
+        textBold.addEventListener('change', (e) => {
+            if (this.selectedElement && this.selectedElement.type === 'text') {
+                this.selectedElement.bold = e.target.checked;
+                this.renderCanvas();
+            }
+        });
+    }
+
     // Mouse/Touch handlers
     getCanvasCoords(e) {
         const rect = this.canvas.getBoundingClientRect();
@@ -373,6 +498,8 @@ class JerseyCentral {
             this.saveHistory();
         }
         this.isDragging = false;
+        this.updatePropertiesPanel();
+        this.renderCanvas();
     }
 
     onWheel(e) {
@@ -421,6 +548,7 @@ class JerseyCentral {
             this.designElements = [];
             this.selectedElement = null;
             this.saveHistory();
+            this.updatePropertiesPanel();
             this.renderCanvas();
         }
     }
@@ -466,11 +594,26 @@ class JerseyCentral {
         this.historyIndex++;
     }
 
+    updatePropertiesPanel() {
+        const panel = document.getElementById('text-properties');
+        if (this.selectedElement && this.selectedElement.type === 'text') {
+            panel.style.display = 'block';
+            document.getElementById('text-input').value = this.selectedElement.text || '';
+            document.getElementById('font-select').value = this.selectedElement.font || 'Inter';
+            document.getElementById('font-size').value = this.selectedElement.size || 24;
+            document.getElementById('text-color').value = this.selectedElement.color || '#000000';
+            document.getElementById('text-bold').checked = this.selectedElement.bold || false;
+        } else {
+            panel.style.display = 'none';
+        }
+    }
+
     undo() {
         if (this.historyIndex > 0) {
             this.historyIndex--;
             this.designElements = JSON.parse(this.history[this.historyIndex]);
             this.selectedElement = null;
+            this.updatePropertiesPanel();
             this.renderCanvas();
         }
     }
@@ -480,6 +623,7 @@ class JerseyCentral {
             this.historyIndex++;
             this.designElements = JSON.parse(this.history[this.historyIndex]);
             this.selectedElement = null;
+            this.updatePropertiesPanel();
             this.renderCanvas();
         }
     }
