@@ -203,6 +203,19 @@ class JerseyCentral {
             this.ctx.fillText('Select a jersey to begin', this.canvas.width/2, this.canvas.height/2);
         }
 
+        // Apply jersey color overlay if set
+        const colorInput = document.getElementById('jersey-color');
+        const opacityInput = document.getElementById('color-opacity');
+        if (colorInput && opacityInput) {
+            const opacity = parseInt(opacityInput.value) / 100;
+            if (opacity > 0) {
+                this.ctx.globalAlpha = opacity;
+                this.ctx.fillStyle = colorInput.value;
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.globalAlpha = 1.0;
+            }
+        }
+
         // Draw all design elements
         this.designElements.forEach(el => {
             this.ctx.save();
@@ -282,14 +295,77 @@ class JerseyCentral {
                         bold: false,
                         width: 200,
                         height: 30
-                    });
-                }
-                document.querySelector('.tool-btn[data-tool="select"]').click();
+        });
+    }
+
+    setupTextProperties() {
+        const textInput = document.getElementById('text-input');
+        const fontSelect = document.getElementById('font-select');
+        const fontSize = document.getElementById('font-size');
+        const textColor = document.getElementById('text-color');
+        const textBold = document.getElementById('text-bold');
+
+        const updateText = () => {
+            if (this.selectedElement && this.selectedElement.type === 'text') {
+                this.renderCanvas();
+            }
+        };
+
+        textInput.addEventListener('input', (e) => {
+            if (this.selectedElement && this.selectedElement.type === 'text') {
+                this.selectedElement.text = e.target.value;
+                updateText();
             }
         });
 
-        // Text properties
-        this.setupTextProperties();
+        fontSelect.addEventListener('change', (e) => {
+            if (this.selectedElement && this.selectedElement.type === 'text') {
+                this.selectedElement.font = e.target.value;
+                updateText();
+            }
+        });
+
+        fontSize.addEventListener('input', (e) => {
+            if (this.selectedElement && this.selectedElement.type === 'text') {
+                this.selectedElement.size = parseInt(e.target.value);
+                updateText();
+            }
+        });
+
+        textColor.addEventListener('input', (e) => {
+            if (this.selectedElement && this.selectedElement.type === 'text') {
+                this.selectedElement.color = e.target.value;
+                updateText();
+            }
+        });
+
+        textBold.addEventListener('change', (e) => {
+            if (this.selectedElement && this.selectedElement.type === 'text') {
+                this.selectedElement.bold = e.target.checked;
+                updateText();
+            }
+        });
+    }
+
+    setupColorControls() {
+        const colorInput = document.getElementById('jersey-color');
+        const opacityInput = document.getElementById('color-opacity');
+        const opacityVal = document.getElementById('opacity-val');
+
+        const updateOverlay = () => {
+            this.renderCanvas();
+        };
+
+        colorInput.addEventListener('input', updateOverlay);
+        opacityInput.addEventListener('input', (e) => {
+            opacityVal.textContent = e.target.value;
+            updateOverlay();
+        });
+    }
+        });
+
+        // Color overlay controls
+        this.setupColorControls();
     }
 
     setupTextProperties() {
