@@ -3,54 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jersey Central</title>
+    <title>Jersey Central - Premium Custom Jerseys</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- Header -->
     <header>
-        <h1>Jersey Central</h1>
-        <p>Premium Custom Jerseys</p>
-        <a href="https://wa.me/8801581872622" class="whatsapp-btn">Order via WhatsApp: +8801581872622</a>
+        <div class="header-container">
+            <div class="logo">
+                <span class="logo-icon">JC</span>
+                <div class="logo-text">
+                    <h1>JERSEY CENTRAL</h1>
+                    <p class="tagline">Premium Custom Sportswear</p>
+                </div>
+            </div>
+            <nav>
+                <a href="#hero" class="nav-link">Home</a>
+                <a href="#jerseys" class="nav-link">Collection</a>
+                <a href="#customization" class="nav-link">Customize</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </nav>
+            <a href="https://wa.me/8801581872622" class="whatsapp-float" target="_blank">
+                <i class="fab fa-whatsapp"></i>
+                <span>ORDER NOW</span>
+            </a>
+        </div>
     </header>
 
+    <!-- Hero Section -->
     <section id="hero">
-        <img src="Banner and ads/jc banner.jpeg" alt="Jersey Central Banner" class="hero-banner">
-    </section>
-
-    <section id="jerseys">
-        <h2>Jersey Collection</h2>
-        <div class="jersey-grid">
-            <!-- Add jersey items here -->
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h2 class="hero-title">WEAR YOUR PASSION</h2>
+            <p class="hero-subtitle">Premium Custom Jerseys & Sportswear</p>
+            <a href="https://wa.me/8801581872622?text=Hi!%20I%20want%20to%20order%20custom%20jerseys." class="cta-btn">
+                <i class="fab fa-whatsapp"></i> Order via WhatsApp
+            </a>
         </div>
     </section>
 
-    <section id="customization">
-        <h2>Customize Your Jersey</h2>
-        <div class="customizer">
-            <div class="options">
-                <label for="jersey-select">Choose Jersey:</label>
-                <select id="jersey-select">
-                    <option value="front_medium_extended.jpeg">Base Jersey</option>
-                    <!-- Add more options -->
-                </select>
-                <label for="design-upload">Upload Design:</label>
-                <input type="file" id="design-upload" accept="image/*">
-                <button id="preview-btn">Preview</button>
-                <button id="download-btn">Download Design</button>
-                <a href="https://wa.me/8801581872622?text=Hi, I want to customize a jersey with this design." class="whatsapp-custom">WhatsApp Us</a>
+    <!-- Jerseys Collection -->
+    <section id="jerseys" class="section">
+        <div class="section-header">
+            <h2>Our Jersey Collection</h2>
+            <p>Select from 47+ premium designs</p>
+        </div>
+        <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all">All Jerseys</button>
+        </div>
+        <div class="jersey-grid" id="jersey-grid"></div>
+    </section>
+
+    <!-- Additional Graphics Sections -->
+    <section id="graphics" class="section">
+        <div class="section-header">
+            <h2>Design Elements</h2>
+            <p>Use our premium graphics to customize</p>
+        </div>
+        <div class="graphics-tabs">
+            <button class="tab-btn active" data-tab="university">University Logos</button>
+            <button class="tab-btn" data-tab="bd">Bangladesh</button>
+            <button class="tab-btn" data-tab="hearts">Hearts</button>
+            <button class="tab-btn" data-tab="popular">Popular</button>
+        </div>
+        <div class="graphics-grid" id="graphics-grid"></div>
+    </section>
+
+    <!-- Customization Section -->
+    <section id="customization" class="section">
+        <div class="section-header">
+            <h2>Customize Your Jersey</h2>
+            <p>Upload your design and create your unique jersey</p>
+        </div>
+        <div class="customizer-container">
+            <div class="customizer-options">
+                <div class="option-group">
+                    <label for="jersey-select"><i class="fas fa-tshirt"></i> Choose Jersey Base</label>
+                    <select id="jersey-select"></select>
+                </div>
+
+                <div class="option-group">
+                    <label for="design-upload"><i class="fas fa-upload"></i> Upload Your Design</label>
+                    <input type="file" id="design-upload" accept="image/*, .png, .jpg, .jpeg">
+                    <small>PNG, JPG up to 10MB (transparent background recommended)</small>
+                </div>
+
+                <div class="option-group">
+                    <label><i class="fas fa-cogs"></i> Design Position</label>
+                    <div class="position-options">
+                        <button class="pos-btn active" data-pos="front">Front</button>
+                        <button class="pos-btn" data-pos="back">Back</button>
+                        <button class="pos-btn" data-pos="sleeve">Sleeve</button>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="preview-btn" class="btn-primary">
+                        <i class="fas fa-eye"></i> Preview
+                    </button>
+                    <button id="download-btn" class="btn-secondary">
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                </div>
+
+                <a href="https://wa.me/8801581872622?text=Hi!%20I%20want%20to%20order%20custom%20jersey%20with%20order%20JC${getOrderNumber()}" class="whatsapp-order-btn" id="whatsapp-order-btn">
+                    <i class="fab fa-whatsapp"></i> Order via WhatsApp
+                </a>
             </div>
-            <div class="preview">
-                <canvas id="preview-canvas" width="300" height="400"></canvas>
+
+            <div class="preview-area">
+                <div class="preview-header">
+                    <h3>Live Preview</h3>
+                    <span id="order-number-display"></span>
+                </div>
+                <div class="canvas-wrapper">
+                    <canvas id="preview-canvas" width="400" height="550"></canvas>
+                </div>
+                <div class="preview-controls">
+                    <button id="reset-btn"><i class="fas fa-redo"></i> Reset</button>
+                </div>
             </div>
         </div>
     </section>
 
-    <footer>
-        <p>Contact: <a href="https://wa.me/8801581872622">+8801581872622</a></p>
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>Jersey Central</h3>
+                <p>Premium custom sportswear for athletes and teams</p>
+                <div class="social-links">
+                    <a href="https://wa.me/8801581872622" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <p><i class="fas fa-phone"></i> +880 1581 872 622</p>
+                <p><i class="fab fa-whatsapp"></i> WhatsApp Only</p>
+                <p><i class="fas fa-clock"></i> 24/7 Available</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Jersey Central. All rights reserved.</p>
+        </div>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Scripts -->
     <script src="script.js"></script>
 </body>
 </html>
