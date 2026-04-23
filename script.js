@@ -765,7 +765,5 @@ class JerseyCentral {
     }
 }
 
-// Initialize on DOM ready
-document.addEventListener('DOMContentLoaded', () => {
-    window.jerseyCentral = new JerseyCentral();
-});
+// Initialize immediately (script has defer)
+window.jerseyCentral = new JerseyCentral();

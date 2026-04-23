@@ -16,6 +16,14 @@
         <p>Loading Jersey Central...</p>
     </div>
 
+    <script>
+        // Safety: hide loader after 5 seconds even if JS fails
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            if (loader) loader.classList.add('hidden');
+        }, 5000);
+    </script>
+
     <!-- Header -->
     <header class="header">
         <div class="header-container">
@@ -406,6 +414,6 @@
     </a>
 
     <!-- Scripts -->
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
 </body>
 </html>
